@@ -4,9 +4,9 @@
  */
 
 import Phaser from 'phaser';
-import { initGlobalRNG } from '../utils/SeededRNG';
-import { ENEMY_CONFIGS } from './data/EnemyData';
-import { ITEM_CONFIGS, RARITY_COLORS } from './data/ItemData';
+import { initGlobalRNG } from '../../utils/SeededRNG';
+import { ENEMY_CONFIGS } from '../data/EnemyData';
+import { ITEM_CONFIGS, RARITY_COLORS } from '../data/ItemData';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -96,28 +96,28 @@ export class BootScene extends Phaser.Scene {
 
   private createEnemyTextures(): void {
     // 为每种敌人类型创建纹理
-    Object.values(ENEMY_CONFIGS).forEach((config) => {
+    Object.values(ENEMY_CONFIGS).forEach((enemyConfig) => {
       const graphics = this.add.graphics();
-      graphics.fillStyle(config.color, 1);
+      graphics.fillStyle(enemyConfig.color, 1);
 
       // 根据类型绘制不同形状
-      if (config.type === 'SLIME') {
+      if (enemyConfig.type === 'SLIME') {
         // 史莱姆：椭圆
-        graphics.fillEllipse(16, 18, config.size, config.size * 0.8);
-      } else if (config.type === 'SKELETON') {
+        graphics.fillEllipse(16, 18, enemyConfig.size, enemyConfig.size * 0.8);
+      } else if (enemyConfig.type === 'SKELETON') {
         // 骷髅：带眼睛的圆形
-        graphics.fillCircle(16, 16, config.size / 2);
+        graphics.fillCircle(16, 16, enemyConfig.size / 2);
         graphics.fillStyle(0x000000, 1);
         graphics.fillCircle(12, 14, 3);
         graphics.fillCircle(20, 14, 3);
-      } else if (config.type === 'MAGE') {
+      } else if (enemyConfig.type === 'MAGE') {
         // 法师：三角形（帽子）+ 圆形
-        graphics.fillCircle(16, 18, config.size / 2);
-        graphics.fillStyle(config.color, 1);
+        graphics.fillCircle(16, 18, enemyConfig.size / 2);
+        graphics.fillStyle(enemyConfig.color, 1);
         graphics.fillTriangle(16, 2, 8, 16, 24, 16);
       }
 
-      const textureKey = `enemy_${config.type.toLowerCase()}`;
+      const textureKey = `enemy_${enemyConfig.type.toLowerCase()}`;
       graphics.generateTexture(textureKey, 32, 32);
       graphics.destroy();
     });
@@ -132,23 +132,23 @@ export class BootScene extends Phaser.Scene {
 
   private createItemTextures(): void {
     // 为每种物品创建纹理
-    Object.values(ITEM_CONFIGS).forEach((config) => {
+    Object.values(ITEM_CONFIGS).forEach((itemConfig) => {
       const graphics = this.add.graphics();
-      const rarityColor = RARITY_COLORS[config.rarity];
+      const rarityColor = RARITY_COLORS[itemConfig.rarity];
 
       // 根据类型绘制不同形状
-      if (config.type === 'CONSUMABLE') {
+      if (itemConfig.type === 'CONSUMABLE') {
         // 消耗品：药水瓶形状
-        graphics.fillStyle(config.color, 1);
+        graphics.fillStyle(itemConfig.color, 1);
         graphics.fillRect(8, 6, 16, 20);
         graphics.fillStyle(rarityColor, 1);
         graphics.fillRect(10, 8, 12, 16);
-      } else if (config.type === 'WEAPON') {
+      } else if (itemConfig.type === 'WEAPON') {
         // 武器：剑形状
         graphics.fillStyle(rarityColor, 1);
         graphics.fillRect(14, 4, 4, 24);
         graphics.fillRect(8, 20, 16, 4);
-      } else if (config.type === 'ARMOR') {
+      } else if (itemConfig.type === 'ARMOR') {
         // 护甲：盾牌形状
         graphics.fillStyle(rarityColor, 1);
         graphics.fillRoundedRect(6, 4, 20, 24, 4);
@@ -161,7 +161,7 @@ export class BootScene extends Phaser.Scene {
         graphics.fillTriangle(16, 4, 28, 16, 16, 28);
       }
 
-      const textureKey = `item_${config.id.toLowerCase()}`;
+      const textureKey = `item_${itemConfig.id.toLowerCase()}`;
       graphics.generateTexture(textureKey, 32, 32);
       graphics.destroy();
     });

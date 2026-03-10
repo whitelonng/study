@@ -271,7 +271,7 @@ export class DungeonGenerator {
       if (room.id !== 'room_1') {
         const enemyCount = this.rng.nextInt(1, 3);
         for (let i = 0; i < enemyCount; i++) {
-          const types = ['SLIME', 'SKELETON', 'MAGE'] as const;
+          const types = ['SLIME', 'SKELETON', 'MAGE'];
           room.enemies.push({
             type: this.rng.pick(types),
             x: this.rng.nextInt(100, room.width - 100),
@@ -282,7 +282,7 @@ export class DungeonGenerator {
 
       // 生成物品（稀有）
       if (this.rng.nextBool(0.3)) {
-        const itemTypes = ['HEALTH_POTION', 'IRON_SWORD', 'STEEL_SHIELD'] as const;
+        const itemTypes = ['HEALTH_POTION', 'IRON_SWORD', 'STEEL_SHIELD'];
         room.items.push({
           type: this.rng.pick(itemTypes),
           x: this.rng.nextInt(100, room.width - 100),

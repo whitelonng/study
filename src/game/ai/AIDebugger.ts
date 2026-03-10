@@ -105,7 +105,7 @@ export class AIDebugger {
     });
   }
 
-  private drawTargetLine(enemy: Enemy, target: Phaser.Math.Vector2): void {
+  private drawTargetLine(enemy: Enemy, target: { x: number; y: number }): void {
     this.graphics.lineStyle(2, 0xff4444, 0.5);
     this.graphics.beginPath();
     this.graphics.moveTo(enemy.x, enemy.y);

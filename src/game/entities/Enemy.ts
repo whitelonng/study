@@ -4,7 +4,7 @@
  */
 
 import Phaser from 'phaser';
-import { Entity, EntityStats } from './Entity';
+import { Entity } from './Entity';
 import { EnemyType, getEnemyConfig, EnemyConfig } from '../data/EnemyData';
 import { Player } from './Player';
 import { HealthBar } from '../ui/HealthBar';
@@ -14,10 +14,8 @@ export type EnemyState = 'IDLE' | 'PATROL' | 'CHASE' | 'ATTACK' | 'DEAD' | 'KNOC
 export class Enemy extends Entity {
   private enemyType: EnemyType;
   private config: EnemyConfig;
-  private state: EnemyState = 'IDLE';
+  private enemyState: EnemyState = 'IDLE';
   private target: Player | null = null;
-  private patrolPoints: Phaser.Math.Vector2[] = [];
-  private currentPatrolIndex: number = 0;
   private attackCooldownTimer: number = 0;
   private stateText: Phaser.GameObjects.Text | null = null;
   private healthBar: HealthBar | null = null;
@@ -43,9 +41,6 @@ export class Enemy extends Entity {
     // 设置深度
     this.setDepth(8);
 
-    // 生成巡逻点
-    this.generatePatrolPoints(x, y);
-
     // 创建血条
     this.healthBar = new HealthBar(scene, this, {
       width: 36,
@@ -57,14 +52,6 @@ export class Enemy extends Entity {
     if (scene.registry.get('debugEnabled')) {
       this.createStateText();
     }
-  }
-
-  private generatePatrolPoints(startX: number, startY: number): void {
-    const range = 100;
-    this.patrolPoints = [
-      new Phaser.Math.Vector2(startX - range, startY),
-      new Phaser.Math.Vector2(startX + range, startY),
-    ];
   }
 
   private createStateText(): void {
@@ -81,15 +68,15 @@ export class Enemy extends Entity {
     this.target = player;
   }
 
-  getState(): EnemyState {
-    return this.state;
+  getEnemyState(): EnemyState {
+    return this.enemyState;
   }
 
   /**
    * 攻击玩家（由 AI 调用）
    */
   attackPlayer(damage: number, direction: Phaser.Math.Vector2): void {
-    this.state = 'ATTACK';
+    this.enemyState = 'ATTACK';
     this.setVelocity(0, 0);
 
     // 攻击动画
@@ -119,11 +106,11 @@ export class Enemy extends Entity {
   override update(delta: number): void {
     super.update(delta);
 
-    if (this.state === 'DEAD') return;
+    if (this.enemyState === 'DEAD') return;
 
     // 被击退时不执行其他行为
     if (this.isEntityKnockedBack()) {
-      this.state = 'KNOCKBACK';
+      this.enemyState = 'KNOCKBACK';
       this.updateHealthBar();
       return;
     }
@@ -139,7 +126,7 @@ export class Enemy extends Entity {
     // 更新状态文本位置
     if (this.stateText) {
       this.stateText.setPosition(this.x - 15, this.y - 35);
-      this.stateText.setText(`${this.state}`);
+      this.stateText.setText(`${this.enemyState}`);
     }
   }
 
@@ -152,11 +139,11 @@ export class Enemy extends Entity {
 
   // 简化的行为方法（AI 会调用这些）
   startPatrol(): void {
-    this.state = 'PATROL';
+    this.enemyState = 'PATROL';
   }
 
   startChase(): void {
-    this.state = 'CHASE';
+    this.enemyState = 'CHASE';
   }
 
   moveToward(targetX: number, targetY: number, speed?: number): void {
@@ -189,7 +176,7 @@ export class Enemy extends Entity {
   }
 
   override onDeath(): void {
-    this.state = 'DEAD';
+    this.enemyState = 'DEAD';
     this.setVelocity(0, 0);
     this.setActive(false);
 

@@ -18,10 +18,10 @@ export interface HealthBarConfig {
 export class HealthBar {
   private scene: Phaser.Scene;
   private target: Phaser.GameObjects.Sprite;
-  private container: Phaser.GameObjects.Container;
-  private background: Phaser.GameObjects.Rectangle;
-  private bar: Phaser.GameObjects.Rectangle;
-  private border: Phaser.GameObjects.Rectangle;
+  private container!: Phaser.GameObjects.Container;
+  private background!: Phaser.GameObjects.Rectangle;
+  private bar!: Phaser.GameObjects.Rectangle;
+  private border!: Phaser.GameObjects.Rectangle;
   private config: HealthBarConfig;
   private currentPercent: number = 1;
   private targetPercent: number = 1;

@@ -20,6 +20,7 @@ export abstract class Entity extends Phaser.Physics.Arcade.Sprite {
   protected invincibleTimer: number = 0;
   protected isKnockedBack: boolean = false;
   protected knockbackTimer: number = 0;
+  protected entityState: string = 'IDLE';
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
     super(scene, x, y, texture);
@@ -45,6 +46,10 @@ export abstract class Entity extends Phaser.Physics.Arcade.Sprite {
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setSize(this.width * 0.8, this.height * 0.8);
     body.setOffset(this.width * 0.1, this.height * 0.1);
+  }
+
+  getEntityState(): string {
+    return this.entityState;
   }
 
   getStats(): EntityStats {
